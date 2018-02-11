@@ -37,11 +37,11 @@
 var http = require ('http');	     // For serving a basic web page.
 var mongoose = require ("mongoose"); // The reason for this demo.
 
-//var dbcreds = require('./dbcreds');
+var dbcreds = require('./dbcreds');
 
 // Here we find an appropriate database to connect to, defaulting to
 // localhost if we don't find one.
-var uristring = process.env.MONGODB_URI ;
+var uristring = process.env.MONGODB_URI || ('mongodb://'+ dbcreds.user +':' + dbcreds.pw + '@ds051913.mlab.com:51913/rezdb');
 
   //('mongodb://'+ dbcreds.user +':' + dbcreds.pw + '@ds051913.mlab.com:51913/rezdb') ;// ||   process.env.MONGODB_URI ;
 
@@ -73,6 +73,7 @@ var userSchema = new mongoose.Schema({
 // nonexistent) the 'PowerUsers' collection in the MongoDB database
 var PUser = mongoose.model('PowerUsers', userSchema);
 
+/*
 // Clear out old data
 PUser.remove({}, function(err) {
   if (err) {
@@ -103,6 +104,7 @@ var alicesmith = new PUser ({
 });
 alicesmith.save(function (err) {if (err) console.log ('Error on save!')});
 
+*/
 
 // In case the browser connects before the database is connected, the
 // user will see this message.
