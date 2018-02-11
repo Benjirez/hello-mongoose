@@ -6,7 +6,7 @@
 // by Ben Wen with thanks to Aaron Heckmann
 
 //
-// Copyright 2015 ObjectLabs Corp.  
+// Copyright 2015 ObjectLabs Corp.
 // ObjectLabs operates MongoLab.com a MongoDb-as-a-Service offering
 //
 // MIT Licensed
@@ -18,10 +18,10 @@
 // including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software,
 // and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:  
+// subject to the following conditions:
 
 // The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software. 
+// included in all copies or substantial portions of the Software.
 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
@@ -30,18 +30,20 @@
 // BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
 // ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE. 
+// SOFTWARE.
 
 //
 // Preamble
 var http = require ('http');	     // For serving a basic web page.
 var mongoose = require ("mongoose"); // The reason for this demo.
 
+var dbcreds = require('../dbcreds');
+
 // Here we find an appropriate database to connect to, defaulting to
-// localhost if we don't find one.  
-var uristring = 
-  process.env.MONGODB_URI || 
-  'mongodb://localhost/HelloMongoose';
+// localhost if we don't find one.
+var uristring =
+  process.env.MONGODB_URI ||
+  ('mongodb://'+ dbcreds.user +':' + dbcreds.pw + '@ds051913.mlab.com:51913/rezdb') );
 
 // The http server will listen to an appropriate port, or default to
 // port 5000.
@@ -50,7 +52,7 @@ var theport = process.env.PORT || 5000;
 // Makes connection asynchronously.  Mongoose will queue up database
 // operations and release them when the connection is complete.
 mongoose.connect(uristring, function (err, res) {
-  if (err) { 
+  if (err) {
     console.log ('ERROR connecting to: ' + uristring + '. ' + err);
   } else {
     console.log ('Succeeded connected to: ' + uristring);
@@ -84,7 +86,7 @@ var johndoe = new PUser ({
   age: 25
 });
 
-// Saving it to the database.  
+// Saving it to the database.
 johndoe.save(function (err) {if (err) console.log ('Error on save!')});
 
 // Creating more users manually
@@ -107,8 +109,8 @@ alicesmith.save(function (err) {if (err) console.log ('Error on save!')});
 var found = ['DB Connection not yet established.  Try again later.  Check the console output for error messages if this persists.'];
 
 // Create a rudimentary http server.  (Note, a real web application
-// would use a complete web framework and router like express.js). 
-// This is effectively the main interaction loop for the application. 
+// would use a complete web framework and router like express.js).
+// This is effectively the main interaction loop for the application.
 // As new http requests arrive, the callback function gets invoked.
 http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/html'});
@@ -117,8 +119,8 @@ http.createServer(function (req, res) {
 
 function createWebpage (req, res) {
   // Let's find all the documents
-  PUser.find({}).exec(function(err, result) { 
-    if (!err) { 
+  PUser.find({}).exec(function(err, result) {
+    if (!err) {
       res.write(html1 + JSON.stringify(result, undefined, 2) +  html2 + result.length + html3);
       // Let's see if there are any senior citizens (older than 64) with the last name Doe using the query constructor
       var query = PUser.find({'name.last': 'Doe'}); // (ok in this example, it's all entries)
@@ -162,5 +164,3 @@ var html4 = '<h2> Queried (name.last = "Doe", age >64) Documents in MonogoDB dat
 var html5 = '</code></pre> <br\> <i>';
 var html6 = ' documents. </i> <br\> <br\> \
 <br\> <br\> <center><i> Demo code available at <a href="http://github.com/mongolab/hello-mongoose">github.com</a> </i></center>';
-
-
