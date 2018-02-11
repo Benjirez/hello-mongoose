@@ -42,11 +42,11 @@ var dbcreds = require('./dbcreds');
 // Here we find an appropriate database to connect to, defaulting to
 // localhost if we don't find one.
 var uristring =
-  ('mongodb://'+ dbcreds.user +':' + dbcreds.pw + '@ds051913.mlab.com:51913/rezdb') ||   process.env.MONGODB_URI ;
+  ('mongodb://'+ dbcreds.user +':' + dbcreds.pw + '@ds051913.mlab.com:51913/rezdb') ;// ||   process.env.MONGODB_URI ;
 
 // The http server will listen to an appropriate port, or default to
 // port 5000.
-var theport = 5000 || process.env.PORT;
+var theport = process.env.PORT || 5000;
 
 // Makes connection asynchronously.  Mongoose will queue up database
 // operations and release them when the connection is complete.
